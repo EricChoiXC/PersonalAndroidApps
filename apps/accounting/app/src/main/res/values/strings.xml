@@ -38,6 +38,23 @@
     <string name="config_delete">删除</string>
     <string name="config_account_number_hint">账户号</string>
 
+    <string name="statistics_filter_type">类型</string>
+    <string name="statistics_filter_account">操作账户</string>
+    <string name="statistics_filter_amount_range">金额范围</string>
+    <string name="statistics_filter_amount_min">最小金额</string>
+    <string name="statistics_filter_amount_max">最大金额</string>
+    <string name="statistics_filter_tags">标签</string>
+    <string name="statistics_filter_date_range">日期范围</string>
+    <string name="statistics_start_date">开始日期</string>
+    <string name="statistics_end_date">结束日期</string>
+    <string name="statistics_query">查询</string>
+    <string name="statistics_result_count">共 %d 条记录</string>
+    <string name="statistics_all">全部</string>
+    <string name="item_bill_type_income">入账</string>
+    <string name="item_bill_type_expense">出账</string>
+    <string name="statistics_date_range_exceed">日期跨度不能超过1年</string>
+    <string name="statistics_invalid_amount">请输入有效金额范围</string>
+
     <!-- Common -->
     <string name="all">全部</string>
     <string name="confirm">确定</string>

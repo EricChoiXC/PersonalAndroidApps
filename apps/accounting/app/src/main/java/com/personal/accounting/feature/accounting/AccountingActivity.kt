@@ -64,7 +64,7 @@ class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
             for (tag in tagList) {
                 val cb = CheckBox(this@AccountingActivity).apply {
                     text = tag.name
-                    tag = tag.id
+                    setTag(tag.id)
                     setTextColor(resources.getColor(R.color.text_primary, theme))
                     textSize = 16f
                     layoutParams = LinearLayout.LayoutParams(

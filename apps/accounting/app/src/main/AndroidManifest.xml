@@ -20,6 +20,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".feature.accounting.AccountingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.statistics.StatisticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.config.ConfigActivity"
+            android:exported="false" />
 
     </application>
 

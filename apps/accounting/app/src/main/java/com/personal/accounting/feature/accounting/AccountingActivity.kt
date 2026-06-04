@@ -1,5 +1,7 @@
 package com.personal.accounting.feature.accounting
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
@@ -16,7 +18,9 @@ import com.personal.accounting.data.local.AppDatabase
 import com.personal.accounting.data.model.AccountEntity
 import com.personal.accounting.data.model.BillEntity
 import com.personal.accounting.databinding.ActivityAccountingBinding
+import com.personal.accounting.util.DateUtils
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
 
@@ -31,6 +35,7 @@ class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
     }
 
     private var mAccountList = listOf<AccountEntity>()
+    private var mBillDate: Long = System.currentTimeMillis()
 
     override fun onCreateBinding(): ActivityAccountingBinding {
         return ActivityAccountingBinding.inflate(layoutInflater)
@@ -40,6 +45,7 @@ class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
         loadAccounts()
         loadTags()
         setupAccountSpinnerListener()
+        setupBillDatePicker()
         mBinding.btnSubmit.setOnClickListener { submitBill() }
     }
 
@@ -94,6 +100,39 @@ class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
         }
     }
 
+    private fun setupBillDatePicker() {
+        updateBillDateDisplay()
+        mBinding.tvBillDate.setOnClickListener {
+            val cal = Calendar.getInstance().apply { timeInMillis = mBillDate }
+            DatePickerDialog(
+                this,
+                { _, year, month, day ->
+                    TimePickerDialog(
+                        this,
+                        { _, hour, minute ->
+                            val selected = Calendar.getInstance().apply {
+                                set(year, month, day, hour, minute, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }
+                            mBillDate = selected.timeInMillis
+                            updateBillDateDisplay()
+                        },
+                        cal.get(Calendar.HOUR_OF_DAY),
+                        cal.get(Calendar.MINUTE),
+                        true
+                    ).show()
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+    }
+
+    private fun updateBillDateDisplay() {
+        mBinding.tvBillDate.text = DateUtils.formatDateTimeDisplay(mBillDate)
+    }
+
     private fun submitBill() {
         val amountStr = mBinding.etAmount.text.toString().trim()
         if (amountStr.isEmpty()) {
@@ -133,7 +172,8 @@ class AccountingActivity : BaseActivity<ActivityAccountingBinding>() {
             accountNumber = accountNumber,
             amount = amount,
             tagIds = selectedTagIds.joinToString(","),
-            remark = remark
+            remark = remark,
+            billDate = mBillDate
         )
 
         lifecycleScope.launch {

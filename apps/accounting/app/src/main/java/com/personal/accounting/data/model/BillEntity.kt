@@ -12,5 +12,6 @@ data class BillEntity(
     val amount: Double,
     val tagIds: String = "",
     val remark: String = "",
-    val createTime: Long = System.currentTimeMillis()
+    val createTime: Long = System.currentTimeMillis(),
+    val billDate: Long = System.currentTimeMillis()
 )

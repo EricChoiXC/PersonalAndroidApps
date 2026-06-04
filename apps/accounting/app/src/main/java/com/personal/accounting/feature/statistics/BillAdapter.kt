@@ -53,7 +53,7 @@ class BillAdapter(
                 it.toLongOrNull()?.let { id -> mTagMap[id]?.name }
             }.joinToString("、")
             mBinding.tvTags.text = tagNames
-            mBinding.tvDate.text = DateUtils.formatDisplay(bill.createTime)
+            mBinding.tvDate.text = DateUtils.formatDisplay(bill.billDate)
         }
     }
 }

@@ -50,12 +50,12 @@ class BillDaoTest {
 
     @Test
     fun getAllReturnsDescOrder() = runBlocking {
-        val id1 = dao.insert(BillEntity(type = 0, accountId = 1, amount = 50.0, createTime = 1000))
-        val id2 = dao.insert(BillEntity(type = 1, accountId = 2, amount = 200.0, createTime = 2000))
+        val id1 = dao.insert(BillEntity(type = 0, accountId = 1, amount = 50.0, billDate = 1000))
+        val id2 = dao.insert(BillEntity(type = 1, accountId = 2, amount = 200.0, billDate = 2000))
         Thread.sleep(10)
         val list = dao.getAll()
         assertEquals(2, list.size)
-        assertTrue(list[0].createTime >= list[1].createTime)
+        assertTrue(list[0].billDate >= list[1].billDate)
     }
 
     @Test
@@ -118,9 +118,9 @@ class BillDaoTest {
         val day1 = 1000000L
         val day2 = 2000000L
         val day3 = 3000000L
-        dao.insert(BillEntity(type = 0, accountId = 1, amount = 10.0, createTime = day1))
-        dao.insert(BillEntity(type = 0, accountId = 1, amount = 20.0, createTime = day2))
-        dao.insert(BillEntity(type = 0, accountId = 1, amount = 30.0, createTime = day3))
+        dao.insert(BillEntity(type = 0, accountId = 1, amount = 10.0, billDate = day1))
+        dao.insert(BillEntity(type = 0, accountId = 1, amount = 20.0, billDate = day2))
+        dao.insert(BillEntity(type = 0, accountId = 1, amount = 30.0, billDate = day3))
 
         val bills = dao.query(startDate = day1, endDate = day2)
         assertEquals(2, bills.size)
@@ -136,9 +136,9 @@ class BillDaoTest {
     @Test
     fun sumByType() = runBlocking {
         val now = System.currentTimeMillis()
-        dao.insert(BillEntity(type = 0, accountId = 1, amount = 10.0, createTime = now))
-        dao.insert(BillEntity(type = 0, accountId = 1, amount = 20.0, createTime = now))
-        dao.insert(BillEntity(type = 1, accountId = 2, amount = 100.0, createTime = now))
+        dao.insert(BillEntity(type = 0, accountId = 1, amount = 10.0, billDate = now))
+        dao.insert(BillEntity(type = 0, accountId = 1, amount = 20.0, billDate = now))
+        dao.insert(BillEntity(type = 1, accountId = 2, amount = 100.0, billDate = now))
 
         val totalExpense = dao.sumByType(0, now - 1000, now + 1000)
         assertEquals(30.0, totalExpense, 0.001)

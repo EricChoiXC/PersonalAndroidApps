@@ -9,12 +9,17 @@ import java.util.Locale
 object DateUtils {
 
     private val sDisplayFormat = SimpleDateFormat(Config.DATE_FORMAT_DISPLAY, Locale.getDefault())
+    private val sDateTimeDisplayFormat = SimpleDateFormat(Config.DATE_TIME_FORMAT_DISPLAY, Locale.getDefault())
     private val sExportFormat = SimpleDateFormat(Config.DATE_FORMAT_EXPORT, Locale.getDefault())
     private val sYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val sYearMonthFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
     fun formatDisplay(timestamp: Long): String {
         return sDisplayFormat.format(Date(timestamp))
+    }
+
+    fun formatDateTimeDisplay(timestamp: Long): String {
+        return sDateTimeDisplayFormat.format(Date(timestamp))
     }
 
     fun formatYear(timestamp: Long): String {

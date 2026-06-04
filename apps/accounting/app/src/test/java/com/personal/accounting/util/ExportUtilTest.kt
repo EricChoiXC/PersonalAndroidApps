@@ -22,8 +22,8 @@ class ExportUtilTest {
     @Test
     fun exportCreatesXlsxFile() {
         val bills = listOf(
-            BillEntity(type = 0, accountId = 1, amount = 50.0, tagIds = "1", remark = "午餐", createTime = 1000),
-            BillEntity(type = 1, accountId = 2, amount = 5000.0, tagIds = "2", remark = "工资", createTime = 2000)
+            BillEntity(type = 0, accountId = 1, amount = 50.0, tagIds = "1", remark = "午餐", billDate = 1000),
+            BillEntity(type = 1, accountId = 2, amount = 5000.0, tagIds = "2", remark = "工资", billDate = 2000)
         )
         val accounts = listOf(
             AccountEntity(id = 1, name = "储蓄卡", accountNumber = "6222", sortOrder = 0),
@@ -78,7 +78,7 @@ class ExportUtilTest {
                 accountId = 1,
                 amount = (i + 1) * 10.0,
                 tagIds = if (i % 2 == 0) "1" else "",
-                createTime = System.currentTimeMillis()
+                billDate = System.currentTimeMillis()
             )
         }
         val accounts = listOf(AccountEntity(id = 1, name = "储蓄卡"))

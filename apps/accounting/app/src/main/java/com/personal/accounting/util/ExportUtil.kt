@@ -48,7 +48,7 @@ object ExportUtil {
             }.joinToString("、")
             row.createCell(5).setCellValue(tagNames)
             row.createCell(6).setCellValue(bill.remark)
-            row.createCell(7).setCellValue(dateFormat.format(Date(bill.createTime)))
+            row.createCell(7).setCellValue(dateFormat.format(Date(bill.billDate)))
         }
 
         for (i in headers.indices) sheet.autoSizeColumn(i)

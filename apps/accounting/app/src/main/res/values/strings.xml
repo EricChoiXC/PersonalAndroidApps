@@ -16,6 +16,7 @@
     <string name="accounting_account_number">账户号</string>
     <string name="accounting_amount">金额</string>
     <string name="accounting_tag">标签</string>
+    <string name="accounting_bill_date">账单日期</string>
     <string name="accounting_remark">备注</string>
     <string name="accounting_submit">提交保存</string>
 

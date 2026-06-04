@@ -23,7 +23,7 @@ interface BillDao {
     @Query("SELECT * FROM bill WHERE id = :id")
     suspend fun getById(id: Long): BillEntity?
 
-    @Query("SELECT * FROM bill ORDER BY createTime DESC")
+    @Query("SELECT * FROM bill ORDER BY billDate DESC")
     suspend fun getAll(): List<BillEntity>
 
     @Query("""
@@ -32,9 +32,9 @@ interface BillDao {
         AND (:accountId IS NULL OR accountId = :accountId)
         AND (:amountMin IS NULL OR amount >= :amountMin)
         AND (:amountMax IS NULL OR amount <= :amountMax)
-        AND (:startDate IS NULL OR createTime >= :startDate)
-        AND (:endDate IS NULL OR createTime <= :endDate)
-        ORDER BY createTime DESC
+        AND (:startDate IS NULL OR billDate >= :startDate)
+        AND (:endDate IS NULL OR billDate <= :endDate)
+        ORDER BY billDate DESC
     """)
     suspend fun query(
         type: Int? = null,
@@ -45,6 +45,6 @@ interface BillDao {
         endDate: Long? = null
     ): List<BillEntity>
 
-    @Query("SELECT COALESCE(SUM(amount), 0) FROM bill WHERE type = :type AND createTime >= :startDate AND createTime <= :endDate")
+    @Query("SELECT COALESCE(SUM(amount), 0) FROM bill WHERE type = :type AND billDate >= :startDate AND billDate <= :endDate")
     suspend fun sumByType(type: Int, startDate: Long, endDate: Long): Double
 }

@@ -37,6 +37,14 @@
     <string name="config_edit">编辑</string>
     <string name="config_delete">删除</string>
     <string name="config_account_number_hint">账户号</string>
+    <string name="config_add_account">新增操作账户</string>
+    <string name="config_edit_account">编辑操作账户</string>
+    <string name="config_add_tag">新增标签</string>
+    <string name="config_edit_tag">编辑标签</string>
+    <string name="hint_name">名称</string>
+    <string name="dialog_confirm_delete">确认删除</string>
+    <string name="dialog_confirm_delete_account">确定要删除操作账户「%s」吗？</string>
+    <string name="dialog_confirm_delete_tag">确定要删除标签「%s」吗？</string>
 
     <string name="statistics_filter_type">类型</string>
     <string name="statistics_filter_account">操作账户</string>

@@ -229,7 +229,7 @@
                     android:background="@drawable/bg_input"
                     android:gravity="center"
                     android:text="@string/statistics_select_year"
-                    android:textColor="@color/brand_primary"
+                    android:textColor="@color/text_primary"
                     android:textSize="14sp" />
 
                 <Button
@@ -242,7 +242,7 @@
                     android:background="@drawable/bg_input"
                     android:gravity="center"
                     android:text="@string/statistics_select_month"
-                    android:textColor="@color/brand_primary"
+                    android:textColor="@color/text_primary"
                     android:textSize="14sp" />
 
             </LinearLayout>

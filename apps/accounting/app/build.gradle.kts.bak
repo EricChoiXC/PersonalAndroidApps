@@ -9,15 +9,6 @@ android {
     compileSdk = 36
     buildToolsVersion = "36.1.0"
 
-    signingConfigs {
-        create("debugSign") {
-            storeFile = file("../debug.keystore")
-            storePassword = "android"
-            keyAlias = "debug"
-            keyPassword = "android"
-        }
-    }
-
     defaultConfig {
         applicationId = "com.personal.accounting"
         minSdk = 26
@@ -35,7 +26,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debugSign")
         }
     }
 

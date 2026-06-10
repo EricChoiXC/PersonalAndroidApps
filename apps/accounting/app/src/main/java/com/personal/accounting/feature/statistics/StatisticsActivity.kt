@@ -1,12 +1,16 @@
 package com.personal.accounting.feature.statistics
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.os.Build
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.personal.accounting.R
@@ -300,6 +304,22 @@ class StatisticsActivity : BaseActivity<ActivityStatisticsBinding>() {
     }
 
     private fun performExport() {
+        if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..Build.VERSION_CODES.P) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_EXPORT
+                )
+                return
+            }
+        }
+        doExport()
+    }
+
+    private fun doExport() {
         lifecycleScope.launch {
             try {
                 val accounts = mAccountRepository.getAll()
@@ -311,25 +331,50 @@ class StatisticsActivity : BaseActivity<ActivityStatisticsBinding>() {
                     tags
                 )
                 if (path != null) {
-                    Toast.makeText(
-                        this@StatisticsActivity,
-                        "${getString(R.string.toast_export_success)} $path",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    android.app.AlertDialog.Builder(this@StatisticsActivity)
+                        .setTitle(R.string.dialog_export_success_title)
+                        .setMessage(getString(R.string.dialog_export_success_message, path))
+                        .setPositiveButton(R.string.confirm, null)
+                        .show()
                 } else {
-                    Toast.makeText(
-                        this@StatisticsActivity,
-                        R.string.toast_export_failed,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    android.app.AlertDialog.Builder(this@StatisticsActivity)
+                        .setTitle(R.string.dialog_export_failed_title)
+                        .setMessage(R.string.dialog_export_failed_message)
+                        .setPositiveButton(R.string.confirm, null)
+                        .show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(
-                    this@StatisticsActivity,
-                    R.string.toast_export_failed,
-                    Toast.LENGTH_SHORT
-                ).show()
+                android.app.AlertDialog.Builder(this@StatisticsActivity)
+                    .setTitle(R.string.dialog_export_failed_title)
+                    .setMessage(R.string.dialog_export_failed_message)
+                    .setPositiveButton(R.string.confirm, null)
+                    .show()
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_EXPORT) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                doExport()
+            } else {
+                android.app.AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_export_failed_title)
+                    .setMessage(R.string.dialog_export_failed_message)
+                    .setPositiveButton(R.string.confirm, null)
+                    .show()
+            }
+        }
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_EXPORT = 1001
     }
 }

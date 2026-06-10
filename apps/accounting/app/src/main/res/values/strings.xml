@@ -72,6 +72,10 @@
     <string name="hint_no_data">暂无数据</string>
     <string name="toast_export_success">导出成功：</string>
     <string name="toast_export_failed">导出失败</string>
+    <string name="dialog_export_success_title">导出成功</string>
+    <string name="dialog_export_success_message">文件已保存至：\n%s</string>
+    <string name="dialog_export_failed_title">导出失败</string>
+    <string name="dialog_export_failed_message">导出失败，请检查存储权限后重试</string>
     <string name="toast_save_success">保存成功</string>
     <string name="toast_save_failed">保存失败</string>
     <string name="toast_required">请填写必填项</string>

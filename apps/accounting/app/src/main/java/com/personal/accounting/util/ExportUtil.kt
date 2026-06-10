@@ -10,7 +10,6 @@ import com.personal.accounting.Config
 import com.personal.accounting.data.model.AccountEntity
 import com.personal.accounting.data.model.BillEntity
 import com.personal.accounting.data.model.TagEntity
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -25,55 +24,52 @@ object ExportUtil {
         accounts: List<AccountEntity>,
         tags: List<TagEntity>
     ): String? {
-        val workbook = XSSFWorkbook()
-        val sheet = workbook.createSheet("账单")
-
-        val headers = arrayOf("序号", "类型", "操作账户", "账户号", "金额", "标签", "备注", "账单时间")
-        val headerRow = sheet.createRow(0)
-        headers.forEachIndexed { i, h -> headerRow.createCell(i).setCellValue(h) }
-
         val dateFormat = SimpleDateFormat(Config.DATE_FORMAT_DISPLAY, Locale.getDefault())
         val accountMap = accounts.associateBy { it.id }
         val tagMap = tags.associateBy { it.id }
 
-        bills.forEachIndexed { index, bill ->
-            val row = sheet.createRow(index + 1)
-            row.createCell(0).setCellValue((index + 1).toDouble())
-            row.createCell(1).setCellValue(if (bill.type == 0) "出账" else "入账")
-            row.createCell(2).setCellValue(accountMap[bill.accountId]?.name ?: "")
-            row.createCell(3).setCellValue(bill.accountNumber)
-            row.createCell(4).setCellValue(bill.amount)
+        val headers = arrayOf("序号", "类型", "操作账户", "账户号", "金额", "标签", "备注", "账单时间")
+
+        val rows: List<Array<Any>> = bills.mapIndexed { index, bill ->
             val tagNames = bill.tagIds.split(",").mapNotNull {
                 it.toLongOrNull()?.let { id -> tagMap[id]?.name }
             }.joinToString("、")
-            row.createCell(5).setCellValue(tagNames)
-            row.createCell(6).setCellValue(bill.remark)
-            row.createCell(7).setCellValue(dateFormat.format(Date(bill.billDate)))
+            arrayOf<Any>(
+                index + 1L,
+                if (bill.type == 0) "出账" else "入账",
+                accountMap[bill.accountId]?.name ?: "",
+                bill.accountNumber,
+                bill.amount,
+                tagNames,
+                bill.remark,
+                dateFormat.format(Date(bill.billDate))
+            )
         }
-
-        for (i in headers.indices) sheet.autoSizeColumn(i)
 
         val fileName = "${Config.EXPORT_FILE_PREFIX}${
             SimpleDateFormat(Config.DATE_FORMAT_EXPORT, Locale.getDefault()).format(Date())
         }${Config.EXPORT_FILE_SUFFIX}"
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            saveViaMediaStore(context, workbook, fileName)
+            saveViaMediaStore(context, headers, rows, fileName)
         } else {
-            saveToLegacyStorage(context, workbook, fileName)
+            saveToLegacyStorage(headers, rows, fileName)
         }
     }
 
     @SuppressLint("NewApi")
     private fun saveViaMediaStore(
         context: Context,
-        workbook: XSSFWorkbook,
+        headers: Array<String>,
+        rows: List<Array<Any>>,
         fileName: String
     ): String? {
         val contentValues = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, fileName)
-            put(MediaStore.Downloads.MIME_TYPE,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            put(
+                MediaStore.Downloads.MIME_TYPE,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
             put(MediaStore.Downloads.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/${Config.EXPORT_DIR}")
         }
         val uri = context.contentResolver.insert(
@@ -81,16 +77,15 @@ object ExportUtil {
         )
         uri?.let {
             context.contentResolver.openOutputStream(it)?.use { os ->
-                workbook.write(os)
+                XlsxWriter.write("账单", headers, rows, os)
             }
         }
-        workbook.close()
         return "${Environment.DIRECTORY_DOWNLOADS}/${Config.EXPORT_DIR}/${fileName}"
     }
 
     private fun saveToLegacyStorage(
-        context: Context,
-        workbook: XSSFWorkbook,
+        headers: Array<String>,
+        rows: List<Array<Any>>,
         fileName: String
     ): String? {
         val dir = File(
@@ -99,8 +94,9 @@ object ExportUtil {
         )
         if (!dir.exists()) dir.mkdirs()
         val file = File(dir, fileName)
-        FileOutputStream(file).use { os -> workbook.write(os) }
-        workbook.close()
+        FileOutputStream(file).use { os ->
+            XlsxWriter.write("账单", headers, rows, os)
+        }
         return file.absolutePath
     }
 }

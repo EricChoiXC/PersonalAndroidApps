@@ -186,6 +186,7 @@ class StatisticsActivity : BaseActivity<ActivityStatisticsBinding>() {
             .show()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun showMonthPickerDialog(
         currentYear: Int,
         currentMonth: Int,
@@ -344,6 +345,7 @@ class StatisticsActivity : BaseActivity<ActivityStatisticsBinding>() {
                         .show()
                 }
             } catch (e: Exception) {
+                android.util.Log.e("StatisticsActivity", "Export failed", e)
                 android.app.AlertDialog.Builder(this@StatisticsActivity)
                     .setTitle(R.string.dialog_export_failed_title)
                     .setMessage(R.string.dialog_export_failed_message)

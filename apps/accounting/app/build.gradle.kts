@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.personal.accounting"
+    namespace = "com.ericxc.android.accounting"
     compileSdk = 36
     buildToolsVersion = "36.1.0"
 
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.personal.accounting"
+        applicationId = "com.ericxc.android.accounting"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

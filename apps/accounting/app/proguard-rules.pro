@@ -11,10 +11,9 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class com.google.gson.** { *; }
--keep class com.personal.accounting.data.model.** { *; }
+-keep class com.ericxc.android.accounting.data.model.** { *; }
 
 # Keep Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class com.bumptech.glide.** { *; }
-
 
